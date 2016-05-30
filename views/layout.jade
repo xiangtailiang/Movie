@@ -1,7 +1,17 @@
-doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+<!DOCTYPE html>
+html(lang="en")
+head
+  meta(charset="UTF-8")
+  title #{title}
+  include ./includes/head
+body
+  include ./includes/header
+  block content
+  hi #{title}
+//- doctype html
+//- html
+//-   head
+//-     title= title
+//-     link(rel='stylesheet', href='/stylesheets/style.css')
+//-   body
+//-     block content
