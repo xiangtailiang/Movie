@@ -28,7 +28,7 @@ MovieSchema.pre('save',function(next){
         this.meta.updateAt=Date.now()}
         next()
 })
-MovieSchema.static={
+MovieSchema.statics={
     fetch:function(cb){
         return this
         .find({})
@@ -36,8 +36,8 @@ MovieSchema.static={
         .exec(cb)
     },
     findById:function(id,cb){
-        return this.findOne({_id:id})
+        return this.findOne({id:id})
         .exec  (cb)
     }
 }
-exports.MovieSchema=mongoose('Movie',MovieSchema)
+exports.Movie=mongoose.model('Movie',MovieSchema)

@@ -1,15 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var Movie=require('../models/model')
+var model=require('../models/model')
+var Movie=model.Movie
 var _=require('underscore')
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Movie首页',movies:'movies' });
+router.get('/', function(req, res) {
+  Movie.fetch(function(err,movies){
+    if(err){console.log(err)}
+    res.render('index', { title: 'Movie首页',movies:movies });
+  })
+  
 });
 
-router.get('/movie/:id', function(req, res, next) {
+router.get('/movie/:id', function(req, res) {
+  var id=req.params.id
   Movie.findById(id,function(err,movie){
-    res.render('detail', { title: 'Movie详情页' 
+    res.render('detail', { title: 'Movie详情页' +movie.title
   ,movie:movie});
   })
   
@@ -18,7 +24,7 @@ router.post('/admin/movie/new',function(req,res){
   var id=req.body.movie._id
   var movieObj=req.body.movie
   var _movie
-  if(id!='undefined'){
+  if(id !=='undefined'){
     Movie.findById(id,function(err,movie){
       if(err){console.log(err)}
       _movie=_.extend(movie,movieObj)
@@ -50,26 +56,45 @@ router.post('/admin/movie/new',function(req,res){
   }
   
 })
-router.get('/admin/update.:id',function(req,res){
+router.get('/admin/update/:id',function(req,res){
   var id =req.params.id
-  
-})
-router.get('/admin/movie', function(req, res, next) {
+  if(id){
     Movie.findById(id,function(err,movie){
-      if(err){console.log(err)}
-      _movie=_.extend(movie,movieObj)
-      _movie.save(function(err,movie){
-        if(err){
-          console.log(err)
-        }
-        res.redirect('/movie/'+movie._id)
+      res.render('admin',{
+        title:'imooc'
+        ,movie:movie
       })
     })
-  res.render('admin', { title: 'Movie后台录入页' });
+  }
+})
+router.get('/admin/movie', function(req, res) {
+  res.render('admin', { title: 'Movie后台录入页',
+          movie:{title:'',
+         doctor:'',
+        country:'',
+        year:'',
+        poster:'',
+        flash:'',
+        summary:'',
+        language:''} });
 });
 
 router.get('/admin/list', function(req, res) {
-  
-  res.render('list', { title: 'Movie列表页' });
+  Movie.find({},function(err,movies){
+    res.render('list', { title: 'Movie列表页',movies:movies});
+  })
 });
+router.delete('/admin/list',function(req,res){
+  var id =req.query.id
+  if(id){
+    Movie.remove({_id:id},function(err,movie){
+      if(err){
+        console.log(err)
+      }
+      else{
+        res.json({sucess:1})
+      }
+    })
+  }
+})
 module.exports = router;
