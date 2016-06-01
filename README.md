@@ -2,13 +2,18 @@
 # 电影管理
 本项目是根据imooc中Scott老师的《node+mongodb建站攻略（一期）》课程完成的，非常感谢慕课网的老师们。
 ## 使用框架和类库
-本项目使用node作为后台开发语言，并以express4.X为类库，mongodb为数据库开发的。 node库使用相关类库
+本项目使用node作为后台开发语言，并以express4.X为类库，mongodb为数据库开发的。
+
+node库使用相关类库
+
 - express4.x
 - jade
 - mongoose
 - path
 - body-parser
+
 前端使用相关类库
+
 - bootstrap
 - jquery
 ## 项目介绍
