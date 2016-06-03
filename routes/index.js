@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var model=require('../models/model')
+var model=require('../models')
 var Movie=model.Movie
+var User=model.User
 var _=require('underscore')
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -97,4 +98,32 @@ router.delete('/admin/list', function(req, res) {
     })
   }
 })
+router.post('/user/signup',function(req,res){
+  var _user=req.body.user
+ 
+  User.findOne({name:_user.name},function(err,user){
+    if(err){
+      console.log(err)
+    }
+    if(user){
+       return res.redirect('/')
+    }
+    else{
+       user=new User(_user)
+       user.save(function(err,user){
+       if(err){
+      console.log(err)
+      }
+      res.redirect('/')
+  })
+    }
+  })
+ 
+})
+
+router.get('/admin/userlist', function(req, res) {
+  User.find({},function(err,users){
+    res.render('userlist', { title: '用户列表页',users:users});
+  })
+});
 module.exports = router;

@@ -1,5 +1,5 @@
 var mongoose=require('mongoose')
-mongoose.connect('mongodb://localhost/imooc')
+
 var MovieSchema = new mongoose.Schema({
     doctor:String,
     title:String,
@@ -40,4 +40,4 @@ MovieSchema.statics={
         .exec  (cb)
     }
 }
-exports.Movie=mongoose.model('Movie',MovieSchema)
+mongoose.model('Movie',MovieSchema)
