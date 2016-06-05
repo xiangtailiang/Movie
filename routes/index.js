@@ -6,6 +6,11 @@ var User=model.User
 var _=require('underscore')
 /* GET home page. */
 router.get('/', function(req, res) {
+
+  var _user=req.session.user
+  if(_user){
+    router.locals.user=_user
+  }
   Movie.fetch(function(err,movies){
     if(err){console.log(err)}
     res.render('index', { title: 'Movie首页',movies:movies });
@@ -126,4 +131,28 @@ router.get('/admin/userlist', function(req, res) {
     res.render('userlist', { title: '用户列表页',users:users});
   })
 });
+
+router.post('/user/signin',function(req,res){
+  var _user=req.body.user
+  var name =_user.name
+  var password=_user.password
+  User.findOne({name:name},function(err,user){
+    if(err){console.log(err)}
+    if(!user){return res.redirect('/')}
+    user.comparePassword(password,function(err,isMatch){
+      if(err){console.log(err)}
+      if(isMatch){
+        
+       req.session.user=user
+        
+        return res.redirect('/')}
+      else(console.log('not match'))
+    })
+  })
+})
+router.get('/logout',function(req,res){
+  delete  req.session.user
+  delete router.locals.user
+  res.redirect('/')
+})
 module.exports = router;

@@ -4,10 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session=require('express-session')
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var MongoStore=require('connect-mongo')(session)
 var app = express();
 
 // view engine setup
@@ -23,6 +23,14 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  resave:false,
+  saveUninitialized:false,
+  secret:'imooc',
+  store:new MongoStore({
+     url:'mongodb://localhost/imooc'
+  }),
+}))
 app.use('/', routes);
 app.use('/users', users);
 
