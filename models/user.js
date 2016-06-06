@@ -1,60 +1,61 @@
-var mongoose=require('mongoose')
+var mongoose = require('mongoose')
 
-var bcrypt=require('bcryptjs')
+var bcrypt = require('bcryptjs')
 var UserSchema = new mongoose.Schema({
     name: {
-    unique: true,
-    type: String
-  },
-  password: String,
-    meta:{
-        createAt:{
-            type:Date,
-            default:Date.now()
+        unique: true,
+        type: String
+    },
+    password: String,
+    role: { type: Number, default: 0 },
+    meta: {
+        createAt: {
+            type: Date,
+            default: Date.now()
         },
-        updateAt:{
-            type:Date,
-            dafault:Date.now()
+        updateAt: {
+            type: Date,
+            dafault: Date.now()
         }
     }
 })
-UserSchema.pre('save',function(next){
-    var user=this
-    if(this.isNew){
-        this.meta.createAt=this.meta.updateAt=Date.now()
+UserSchema.pre('save', function (next) {
+    var user = this
+    if (this.isNew) {
+        this.meta.createAt = this.meta.updateAt = Date.now()
     }
-    else{
-        this.meta.updateAt=Date.now()
+    else {
+        this.meta.updateAt = Date.now()
     }
-    bcrypt.genSalt(10,function(err,salt){
-        if(err) {return next(err)}
-        bcrypt.hash(user.password,salt,function(err,hash){
-            if(err){return next(err)}
-            user.password =hash
+    bcrypt.genSalt(10, function (err, salt) {
+        if (err) { return next(err) }
+        bcrypt.hash(user.password, salt, function (err, hash) {
+            if (err) { return next(err) }
+            user.password = hash
             next()
         })
     })
 })
-UserSchema.methods={
-    comparePassword:function(_password,cb){
-        bcrypt.compare(_password,this.password,function(err,isMatch){
-            if(err){
+UserSchema.methods = {
+    comparePassword: function (_password, cb) {
+        bcrypt.compare(_password, this.password, function (err, isMatch) {
+            if (err) {
                 console.log(err)
             }
-            cb(null,isMatch)
+            cb(null, isMatch)
         })
     }
 }
-UserSchema.statics={
-    fetch:function(cb){
+UserSchema.statics = {
+    fetch: function (cb) {
         return this
-        .find({})
-        .sort('meta.updateAt')
-        .exec(cb)
+            .find({})
+            .sort('meta.updateAt')
+            .exec(cb)
     },
-    findById:function(id,cb){
-        return this.findOne({_id:id})
-        .exec  (cb)
+    findById: function (id, cb) {
+        return this.findOne({ _id: id })
+            .exec(cb)
     }
 }
-mongoose.model('User',UserSchema)
+mongoose.model('User', UserSchema)
