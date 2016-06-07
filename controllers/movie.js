@@ -9,6 +9,7 @@ exports.detail = function (req, res) {
         Comment
             .find({ movie: id })
             .populate('form', 'name')
+            .populate('reply.form reply.to', 'name')
             .exec(function (err, comments) {
                 res.render('detail', {
                     title: 'Movie详情页',
@@ -59,10 +60,10 @@ exports.new = function (req, res) {
 //update
 exports.update = function (req, res) {
     var id = req.params.id
-    console.log(id)
+    
     if (id) {
         Movie.findById(id, function (err, movie) {
-            console.log(movie)
+            
             res.render('admin', {
                 title: 'imooc'
                 , movie: movie

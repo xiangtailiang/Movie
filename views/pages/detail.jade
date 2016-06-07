@@ -4,7 +4,7 @@ block content
   .container
     .row
       .col-md-7
-        embed(src="#{movie.flash}", allowFullScreen="true", quality="high", width="720", height="600", align="middle", allowScriptAcess="always", type="application/x-shockwave-flash")
+        embed(src="#{movie.flash}", allowFullScreen="true", quality="high", width="720", height="600", align="middle", allowScriptAcess="always", type="application/x-shockwave-flash",wmode="opaque")
         .panel.panel-defatul
           .panel-heading
             h3 评论区
@@ -56,4 +56,4 @@ block content
           dd= movie.year
           dt 简介
           dd= movie.summary
-        
+  script(src="/js/detail.js")
