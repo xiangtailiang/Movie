@@ -1,6 +1,7 @@
 var model = require('../models')
 var Movie = model.Movie
 var Comment=model.Comment
+var Catetory=model.Catetory
 var _=require('underscore')
 //detail
 exports.detail = function (req, res) {
@@ -8,8 +9,8 @@ exports.detail = function (req, res) {
     Movie.findById(id, function (err, movie) {
         Comment
             .find({ movie: id })
-            .populate('form', 'name')
-            .populate('reply.form reply.to', 'name')
+            .populate('from', 'name')
+            .populate('reply.from reply.to', 'name')
             .exec(function (err, comments) {
                 res.render('detail', {
                     title: 'Movie详情页',
@@ -35,49 +36,53 @@ exports.new = function (req, res) {
                 }
                 res.redirect('/movie/' + movie._id)
             })
-
         })
     }
     else {
-        _movie = new Movie({
-            doctor: movieObj.doctor,
-            title: movieObj.title,
-            country: movieObj.country,
-            language: movieObj.language,
-            year: movieObj.year,
-            poster: movieObj.poster,
-            symmary: movieObj.symmary,
-            flash: movieObj.flash
-        })
+        _movie = new Movie(movieObj)
+        var catetoryId=movieObj.catetory
         _movie.save(function (err, movie) {
             if (err) {
                 console.log(err)
             }
-            res.redirect('/movie/' + movie._id)
+            // console.log(catetoryId)
+             Catetory.findById(catetoryId,function(err,catetory){
+            catetory.movies.push(movie._id)
+            catetory.save(function(err,catetory){
+                res.redirect('/movie/' + movie._id)
+            })
+        })
+            
         })
     }
 }
 //update
 exports.update = function (req, res) {
     var id = req.params.id
-    
-    if (id) {
-        Movie.findById(id, function (err, movie) {
-            
-            res.render('admin', {
-                title: 'imooc'
-                , movie: movie
 
+    if (id) {
+
+        Movie.findById(id, function (err, movie) {
+            Catetory.find({}, function (err, catetories) {
+                res.render('admin', {
+                    title: 'Movie后台更新页',
+                    catetories: catetories,
+                    movie: movie
+                });
             })
+
         })
     }
 }
 //save
 exports.save = function (req, res) {
-    res.render('admin', {
+    Catetory.find({},function(err,catetories){
+          res.render('admin', {
         title: 'Movie后台录入页',
+        catetories:catetories,
         movie: {}
     });
+    })
 }
 //list
 exports.list = function (req, res) {

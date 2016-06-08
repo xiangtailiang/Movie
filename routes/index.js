@@ -4,6 +4,7 @@ var Index=require('../controllers/index')
 var Movie=require('../controllers/movie')
 var User=require('../controllers/user')
 var Comment=require('../controllers/comment')
+var Catetory=require('../controllers/catetory')
 /* GET home page. */
 //index
 router.get('/', Index.index);
@@ -22,3 +23,7 @@ router.get('/logout',User.logout);
 //comment
 router.post('/admin/comment',User.signRequired,Comment.save);
 module.exports = router;
+//catetory
+router.get('/admin/catetory/new',User.signRequired,User.adminRequired,Catetory.new);
+router.post('/admin/catetory',User.signRequired,User.adminRequired,Catetory.save);
+router.get('/admin/catetory/list',User.signRequired,User.adminRequired,Catetory.list);

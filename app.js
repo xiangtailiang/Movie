@@ -33,9 +33,9 @@ app.use(session({
 }))
 app.use(function(req,res,next){
   var _user=req.session.user
-  console.log(_user)
+ 
   app.locals.user=_user
-  console.log(app.locals.user)
+
   next()
 })
 app.use('/', routes);
