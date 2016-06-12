@@ -27,3 +27,6 @@ module.exports = router;
 router.get('/admin/catetory/new',User.signRequired,User.adminRequired,Catetory.new);
 router.post('/admin/catetory',User.signRequired,User.adminRequired,Catetory.save);
 router.get('/admin/catetory/list',User.signRequired,User.adminRequired,Catetory.list);
+router.delete('/admin/catetory/del',User.signRequired,User.adminRequired,Catetory.del);
+//results
+router.get('/results',Index.search);

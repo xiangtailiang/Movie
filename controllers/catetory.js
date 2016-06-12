@@ -25,3 +25,19 @@ exports.list = function (req, res) {
         res.render('Catetorylist', { title: '用户列表页', catetories: catetories });
     })
 }
+//del
+exports.del = function (req, res) {
+    var id = req.query.id
+
+    if (id) {
+        Catetory.remove({ _id: id }, function (err, movie) {
+            if (err) {
+                console.log(err)
+                res.json({ success: 0 })
+            }
+            else {
+                res.json({ success: 1 })
+            }
+        })
+    }
+}

@@ -1,8 +1,8 @@
 var model = require('../models')
 var Movie = model.Movie
-var Comment=model.Comment
-var Catetory=model.Catetory
-var _=require('underscore')
+var Comment = model.Comment
+var Catetory = model.Catetory
+var _ = require('underscore')
 //detail
 exports.detail = function (req, res) {
     var id = req.params.id
@@ -15,7 +15,7 @@ exports.detail = function (req, res) {
                 res.render('detail', {
                     title: 'Movie详情页',
                     movie: movie,
-                    comments:comments
+                    comments: comments
                 });
             })
 
@@ -40,19 +40,34 @@ exports.new = function (req, res) {
     }
     else {
         _movie = new Movie(movieObj)
-        var catetoryId=movieObj.catetory
+        var catetoryId = movieObj.catetory
+        var catetoryName = movieObj.catetoryName
         _movie.save(function (err, movie) {
             if (err) {
                 console.log(err)
             }
-            // console.log(catetoryId)
-             Catetory.findById(catetoryId,function(err,catetory){
-            catetory.movies.push(movie._id)
-            catetory.save(function(err,catetory){
-                res.redirect('/movie/' + movie._id)
-            })
-        })
-            
+            if (catetoryId) {
+                Catetory.findById(catetoryId, function (err, catetory) {
+                    catetory.movies.push(movie._id)
+                    catetory.save(function (err, catetory) {
+                        res.redirect('/movie/' + movie._id)
+                    })
+                })
+            }
+            else {
+                var catetory = new Catetory({
+                    name: catetoryName,
+                    movies: [movie._id]
+                })
+                catetory.save(function (err, catetory) {
+                    console.log(err)
+                    movie.catetory=catetory._id
+                    movie.save(function(err,movie){
+                        res.redirect('/movie/' + movie._id)
+                    })
+                    
+                })
+            }
         })
     }
 }
