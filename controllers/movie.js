@@ -3,6 +3,8 @@ var Movie = model.Movie
 var Comment = model.Comment
 var Catetory = model.Catetory
 var _ = require('underscore')
+var fs=require('fs')
+var path=require('path')
 //detail
 exports.detail = function (req, res) {
     var id = req.params.id
@@ -26,6 +28,9 @@ exports.new = function (req, res) {
     var id = req.body.movie._id
     var movieObj = req.body.movie
     var _movie
+    if(req.poster){
+        movieObj.poster=req.poster
+    }
     if (id) {
         Movie.findById(id, function (err, movie) {
             if (err) { console.log(err) }
@@ -119,5 +124,26 @@ exports.del = function (req, res) {
                 res.json({ success: 1 })
             }
         })
+    }
+}
+//admin poster
+exports.savePoster = function (req, res, next) {
+    var posterData = req.files.uploadPoster
+    var filePath = posterData.path
+    var originalFilename = posterData.originalFilename
+    if (originalFilename) {
+        fs.readFile(filePath, function (err, data) {
+            var timestamp = Date.now()
+            var type = posterData.type.split('/')[1]
+            var poster = timestamp + '.' + type
+            var newPath = path.join(__dirname, '../', '/public/upload/' + poster)
+            fs.writeFile(newPath, data, function (err) {
+                req.poster = poster
+                next()
+            })
+        })
+    }
+    else {
+        next()
     }
 }

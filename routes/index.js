@@ -10,7 +10,7 @@ var Catetory=require('../controllers/catetory')
 router.get('/', Index.index);
 //movie
 router.get('/movie/:id', Movie.detail);
-router.post('/admin/movie/new',User.signRequired,User.adminRequired,Movie.new);
+router.post('/admin/movie/new',User.signRequired,User.adminRequired,Movie.savePoster,Movie.new);
 router.get('/admin/update/:id',User.signRequired,User.adminRequired,Movie.update);
 router.get('/admin/movie',User.signRequired,User.adminRequired,Movie.list);
 router.get('/admin/list',User.signRequired,User.adminRequired,Movie.save);
