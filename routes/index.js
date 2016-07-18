@@ -22,7 +22,7 @@ router.post('/user/signin',User.signin);
 router.get('/logout',User.logout);
 //comment
 router.post('/admin/comment',User.signRequired,Comment.save);
-module.exports = router;
+
 //catetory
 router.get('/admin/catetory/new',User.signRequired,User.adminRequired,Catetory.new);
 router.post('/admin/catetory',User.signRequired,User.adminRequired,Catetory.save);
@@ -30,3 +30,4 @@ router.get('/admin/catetory/list',User.signRequired,User.adminRequired,Catetory.
 router.delete('/admin/catetory/del',User.signRequired,User.adminRequired,Catetory.del);
 //results
 router.get('/results',Index.search);
+module.exports = router;
